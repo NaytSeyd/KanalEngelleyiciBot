@@ -22,14 +22,24 @@ async def block_channels(client, message):
     chat = message.chat
     msg_channel = message.sender_chat
     get_chat = await client.get_chat(chat.id)
-    if (
-        msg_channel
-        and get_chat.linked_chat
-        and get_chat.linked_chat.id != msg_channel.id
-        and str(msg_channel.id).startswith('-100')
-    ):
+    if message.from_user:
+        return
+    if msg_channel.id == chat.id:  # Anonim Yönetici
+        return
+    if get_chat.linked_chat:
+        if (
+            msg_channel
+            and get_chat.linked_chat
+            and get_chat.linked_chat.id != msg_channel.id
+            and str(msg_channel.id).startswith('-100')
+        ):
+            await client.delete_messages(chat.id, message.id)
+            await chat.ban_member(msg_channel.id)
+            return
+    else:
         await client.delete_messages(chat.id, message.id)
         await chat.ban_member(msg_channel.id)
+        return
 
 
 @app.on_message(filters.command(['start', 'help'], ['/', '!']) & filters.private)
