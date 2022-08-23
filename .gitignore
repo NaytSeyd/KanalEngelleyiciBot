@@ -1,0 +1,10 @@
+*.session
+*.session-journal
+*secret*
+.DS_Store/
+.idea/
+.progress
+.vscode/
+__pycache__/
+config.env
+dump.rdb
